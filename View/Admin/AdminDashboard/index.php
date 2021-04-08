@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../base.php';
+include 'base.php';
 include 'drawer.php';
 ?>
 <div id="content-wrapper">
@@ -8,7 +8,7 @@ include 'drawer.php';
 
 <div class="mui-container-fluid">
   <br>
-  <h1>Welcome User</h1>
+  <h1>Welcome Admin</h1>
   <?php
   if(isset($_SESSION["user_image"]) && isset($_SESSION['user_first_name']) && isset($_SESSION['user_email_address']))
   {
@@ -20,6 +20,6 @@ include 'drawer.php';
 </div>
 </div>
 <?php
-include '../footer.php';
+include '../../footer.php';
 ?>
 

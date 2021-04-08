@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../base.php';
+include 'base.php';
 include 'drawer.php';
 ?>
 
@@ -8,10 +8,11 @@ include 'drawer.php';
 <div class="mui--appbar-height"></div>
 <div class="mui-container-fluid">
   <br>
-  <h1>Feedback</h1>
+  <h1>Add Past Questions</h1>
+
 </div>
 </div>
 
 <?php 
-include '../footer.php';
+include '../../footer.php';
 ?>

@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../base.php';
+include 'base.php';
 include 'drawer.php';
 ?>
 
@@ -13,5 +13,5 @@ include 'drawer.php';
 </div>
 
 <?php 
-include '../footer.php';
+include '../../footer.php';
 ?>
