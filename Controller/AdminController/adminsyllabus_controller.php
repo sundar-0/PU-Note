@@ -3,6 +3,7 @@ include 'C:\xampp\htdocs\PUNotes\Controller\connection.php';
 if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
 session_start();
+
 //Add Note Code Here:
 if (isset($_POST['addclick']))
 {
@@ -17,9 +18,9 @@ $file=explode(".",$filename)[0];
 $sql="SELECT faculty_name,program_name FROM faculty JOIN program on faculty.id=program.fact_id WHERE faculty.id=$faculty_id and program.id=$program_id";
 $result=$conn->query($sql);
 $row=mysqli_fetch_object($result);
-$path ="C:/xampp/htdocs/PUNotes/View/static/Faculty/$row->faculty_name/$row->program_name/Notes/Semester/$semester/"; 
-
+$path ="C:/xampp/htdocs/PUNotes/View/static/Faculty/$row->faculty_name/$row->program_name/Syllabus/Semester/$semester/"; 
 $original_path=$path.$filename;
+
 if (is_uploaded_file($_FILES['file']['tmp_name'])) {
     if (($_FILES['file']['type'] != "application/pdf") )
             {
@@ -30,12 +31,12 @@ if (is_uploaded_file($_FILES['file']['tmp_name'])) {
                $target_file = basename($_FILES["file"]["name"]);
                $result = move_uploaded_file($_FILES['file']['tmp_name'],$path .$filename);
                if($result== 1){
-                   $sql="INSERT INTO `course`(`course_name`,`path`,`faculty`, `program`, `semester`, `added_by`) VALUES ('$file','$original_path','$faculty_id','$program_id','$semester','$AddedBy')";
+                   $sql="INSERT INTO `syllabus`(`syllabus_name`,`path`,`faculty`, `program`, `semester`, `added_by`) VALUES ('$file','$original_path','$faculty_id','$program_id','$semester','$AddedBy')";
                    if($conn->query($sql)==TRUE){
-                       echo "Note Uploaded Successfully!!!";
+                       echo "Syllabus Uploaded Successfully!!!";
                    }
                    else{
-                       echo "There was problem on uploading the note!!!";
+                       echo "There was problem on uploading the syllabus!!!";
                    }
                }
            
@@ -52,12 +53,12 @@ if($_POST['deleteclick']=='yes')
 $id=$_POST['id'];
 $filepath=$_POST['file_path'];
 unlink($filepath);
-$sql="DELETE FROM `course` WHERE id='$id'";
+$sql="DELETE FROM `syllabus` WHERE id='$id'";
 if($conn->query($sql)==TRUE){
-    echo "Note Deleted Successfully!!!";
+    echo "Syllabus Deleted Successfully!!!";
 }
 else{
-    echo "There was problem on Deleting the note!!!";
+    echo "There was problem on Deleting the syllabus!!!";
 }
 }
 }
@@ -79,7 +80,7 @@ if (isset($_POST['updateclick']))
     {
             $filename=$_FILES['updated_file']['name'];
             $file=explode(".",$filename)[0];
-            $path ="C:/xampp/htdocs/PUNotes/View/static/Faculty/$row->faculty_name/$row->program_name/Notes/Semester/$updated_semester/";    
+            $path ="C:/xampp/htdocs/PUNotes/View/static/Faculty/$row->faculty_name/$row->program_name/Syllabus/Semester/$updated_semester/";        
             $updated_filepath=$path.$filename;
         if (is_uploaded_file($_FILES['updated_file']['tmp_name'])) 
                 {
@@ -96,24 +97,24 @@ if (isset($_POST['updateclick']))
                                     $target_file = basename($_FILES["updated_file"]["name"]);
                                     $result = move_uploaded_file($_FILES['updated_file']['tmp_name'],$path .$filename);
                                     if($result== 1){
-                                        $sql="UPDATE `course` SET `course_name`='$file',`path`='$updated_filepath',`faculty`='$updated_faculty',`program`='$updated_program',`semester`='$updated_semester' WHERE id='$id' ";
+                                        $sql="UPDATE `syllabus` SET `syllabus_name`='$file',`path`='$updated_filepath',`faculty`='$updated_faculty',`program`='$updated_program',`semester`='$updated_semester' WHERE id='$id' ";
                                         if($conn->query($sql)==TRUE){
-                                            echo "Note Updated Successfully!!!";
+                                            echo "Syllabus Updated Successfully!!!";
                                         }
                                         else{
-                                            echo "There was problem on Updating the note!!!";
+                                            echo "There was problem on Updating the syllabus!!!";
                                         }
                                     }
                                 
                                 }
                             else{
                                     
-                                    $sql="UPDATE `course` SET `course_name`='$file',`path`='$updated_filepath',`faculty`='$updated_faculty',`program`='$updated_program',`semester`='$updated_semester' WHERE id='$id' ";
+                                    $sql="UPDATE `syllabus` SET `syllabus_name`='$file',`path`='$updated_filepath',`faculty`='$updated_faculty',`program`='$updated_program',`semester`='$updated_semester' WHERE id='$id' ";
                                     if($conn->query($sql)==TRUE){
-                                        echo "Note Updated Successfully!!!";
+                                        echo "Syllabus Updated Successfully!!!";
                                     }
                                     else{
-                                        echo "There was problem on Updating the note!!!";
+                                        echo "There was problem on Updating the Syllabus!!!";
                                     }
                                 }
                             
@@ -129,29 +130,29 @@ if (isset($_POST['updateclick']))
             //All 3 are True
             if(!($row->faculty_name==$prev_faculty && $row->program_name==$prev_program && $updated_semester==$prev_sem))
             {
-                $curr_path ="C:/xampp/htdocs/PUNotes/View/static/Faculty/$row->faculty_name/$row->program_name/Notes/Semester/$updated_semester/$prev_filename"; 
+                $curr_path ="C:/xampp/htdocs/PUNotes/View/static/Faculty/$row->faculty_name/$row->program_name/Syllabus/Semester/$updated_semester/$prev_filename"; 
                 $result=rename($previous_filepath,$curr_path);
                 if($result==1){
-                    $sql="UPDATE `course` SET `path`='$curr_path',`faculty`='$updated_faculty',`program`='$updated_program',`semester`='$updated_semester' WHERE id='$id' ";
+                    $sql="UPDATE `syllabus` SET `path`='$curr_path',`faculty`='$updated_faculty',`program`='$updated_program',`semester`='$updated_semester' WHERE id='$id' ";
                     if($conn->query($sql)==TRUE){
-                        echo "Note Updated Successfully!!!";
+                        echo "Syllabus Updated Successfully!!!";
                     }
                     else{
-                        echo "There was problem on Updating the note!!!";
+                        echo "There was problem on Updating the Syllabus!!!";
                     }
                 }
             } 
         }  
-    }
+}
 }
 }
 
 else{
 
     //Fetch All Note Code Here
-    $sql="SELECT * FROM `course`";
+    $sql="SELECT * FROM `syllabus`";
     $result=$conn->query($sql);
-    $all_note=mysqli_fetch_all($result);
+    $all_syllabus=mysqli_fetch_all($result);
  
 }
 

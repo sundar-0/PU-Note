@@ -186,6 +186,7 @@ $.ajax({
         data:fd,
         success: function(data) {
             alert(data);
+            location.reload()
         }
     });
 
@@ -205,6 +206,7 @@ function deletenote(id,file_path){
         data:fd,
         success: function(data) {
             alert(data);
+            location.reload()
         }
     });
     }
@@ -236,6 +238,7 @@ $(document).ready(function(){
           data:fd,
           success: function (data) {
             alert(data);
+            location.reload()
            
           }
           })
