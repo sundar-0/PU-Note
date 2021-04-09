@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 06, 2021 at 08:50 AM
+-- Generation Time: Apr 09, 2021 at 02:10 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.3.27
 
@@ -29,7 +29,8 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `course` (
   `id` int(11) NOT NULL,
-  `course_filename` varchar(255) NOT NULL,
+  `course_name` varchar(255) NOT NULL,
+  `path` varchar(500) NOT NULL,
   `faculty` int(11) NOT NULL,
   `program` int(11) NOT NULL,
   `semester` int(11) NOT NULL,
@@ -48,6 +49,17 @@ CREATE TABLE `enroll` (
   `faculty` int(11) NOT NULL,
   `program` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `enroll`
+--
+
+INSERT INTO `enroll` (`user`, `faculty`, `program`) VALUES
+(2, 1, 4),
+(3, 3, 33),
+(4, 1, 1),
+(4, 3, 1),
+(4, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -69,6 +81,24 @@ INSERT INTO `faculty` (`id`, `faculty_name`) VALUES
 (2, 'Health Science'),
 (3, 'Science and Technology'),
 (4, 'Humanities and Social Sciences');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `old_question`
+--
+
+CREATE TABLE `old_question` (
+  `id` int(11) NOT NULL,
+  `question` varchar(250) NOT NULL,
+  `path` varchar(400) NOT NULL,
+  `faculty` int(11) NOT NULL,
+  `program` int(11) NOT NULL,
+  `semester` int(11) NOT NULL,
+  `year` varchar(255) NOT NULL,
+  `added_by` int(11) NOT NULL,
+  `added_date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -127,7 +157,8 @@ INSERT INTO `program` (`id`, `program_name`, `fact_id`) VALUES
 
 CREATE TABLE `syllabus` (
   `id` int(11) NOT NULL,
-  `syllabus_filename` varchar(255) NOT NULL,
+  `syllabus_name` varchar(255) NOT NULL,
+  `path` varchar(500) NOT NULL,
   `faculty` int(11) NOT NULL,
   `program` int(11) NOT NULL,
   `semester` int(11) NOT NULL,
@@ -147,15 +178,18 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `first_name` varchar(255) NOT NULL,
   `last_name` varchar(255) NOT NULL,
-  `is_admin` tinyint(1) NOT NULL DEFAULT 0
+  `is_admin` tinyint(1) NOT NULL DEFAULT 0,
+  `college` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `email`, `password`, `first_name`, `last_name`, `is_admin`) VALUES
-(1, 'sundardumre69@live.com', '12', '', '', 0);
+INSERT INTO `users` (`id`, `email`, `password`, `first_name`, `last_name`, `is_admin`, `college`) VALUES
+(2, 'roshandumre45@gmail.com', 'roshan12', 'Roshan', 'Dumre', 0, 'KWS'),
+(3, 'sundardumre69@live.com', '1234', 'Sundar', 'Dumre', 0, 'Nepal Engineering College'),
+(4, 'suresh@gmail.com', 'admin', 'Suresh', 'Yadav', 1, '');
 
 -- --------------------------------------------------------
 
@@ -195,6 +229,15 @@ ALTER TABLE `enroll`
 --
 ALTER TABLE `faculty`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `old_question`
+--
+ALTER TABLE `old_question`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `faculty` (`faculty`),
+  ADD KEY `program` (`program`),
+  ADD KEY `added_by` (`added_by`);
 
 --
 -- Indexes for table `program`
@@ -241,6 +284,12 @@ ALTER TABLE `faculty`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `old_question`
+--
+ALTER TABLE `old_question`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `program`
 --
 ALTER TABLE `program`
@@ -256,7 +305,7 @@ ALTER TABLE `syllabus`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users_login`
@@ -282,6 +331,14 @@ ALTER TABLE `enroll`
   ADD CONSTRAINT `enroll_ibfk_1` FOREIGN KEY (`user`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `enroll_ibfk_2` FOREIGN KEY (`faculty`) REFERENCES `faculty` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `enroll_ibfk_3` FOREIGN KEY (`program`) REFERENCES `program` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `old_question`
+--
+ALTER TABLE `old_question`
+  ADD CONSTRAINT `old_question_ibfk_1` FOREIGN KEY (`faculty`) REFERENCES `faculty` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `old_question_ibfk_2` FOREIGN KEY (`program`) REFERENCES `program` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `old_question_ibfk_3` FOREIGN KEY (`added_by`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `program`
