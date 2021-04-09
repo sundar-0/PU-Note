@@ -38,6 +38,3 @@ include 'drawer.php';
 </div>
 </div>
 
-<?php 
-include '../../footer.php';
-?>

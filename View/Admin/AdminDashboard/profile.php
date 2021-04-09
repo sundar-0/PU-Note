@@ -9,10 +9,6 @@ $user=$_SESSION['user'];
 
 </div>
 
-
-<?php 
-include '../../footer.php';
-?>
 <script>
 $(document).ready(function(){
     $('#enroll').submit(function(e){
