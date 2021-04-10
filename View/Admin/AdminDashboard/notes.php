@@ -3,9 +3,7 @@ session_start();
 include 'base.php';
 include 'drawer.php';
 include '../../../Controller/enroll_controller.php';
-include '../../../Controller/AdminController/adminnote_controller.php';
 ?>
-
 <div id="content-wrapper">
 <div class="mui--appbar-height"></div>
 <div class="mui-container">
@@ -95,45 +93,47 @@ include '../../../Controller/AdminController/adminnote_controller.php';
   </div>
 <br><br>
 
+<hr>
+<div>
+<h1>Sort By:</h1>
+<div class="mui-row">
+    <div class="mui-col-md-6" >
+        <div class="mui-select">
+                      <select name="req_program" id="req_program">
+                        <?php
+                        foreach($program as $x => $x_value) {
+                          echo '<option  value="'.$x_value[0].'">'.$x_value[1].'</option>';
+                        }
+                        ?> 
+                      </select>
+                      <label>Program</label>
+        </div>
+    </div>
+    <div class="mui-col-md-6" >
+          <div class="mui-select">
+                        <select name="req_semester" id="req_semester">
+                          <?php
+                          for($i=1;$i<=8;$i++) {
+                            echo '<option  value="'.$i.'">'.$i.'</option>';
+                          }
+                          ?> 
+                        </select>
+                        <label>Semester</label>
+          </div>
+    </div>
+</div>
+
+<button class="mui-btn mui-btn--raised" id="sortNote">Apply</button>
+
+</div><br><br>
 
 
-  <table class="mui-table mui-table--bordered">
-  <thead>
-    <tr>
-      <th>id</th>
-      <th>Course Name</th>
-      <th>Faculty</th>
-      <th>Program</th>
-    
-      <th>Semester</th>
-      <th>Added By</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-  <?php 
-  if(!empty($all_note))
-   foreach($all_note as $x => $x_value) {
 
-     
-     ?>
-     <tr>
+<div id="table_info">
 
-      <td><?php echo $x_value[0]?></td>
-      <td>
-      <?php echo $x_value[1]?>
-      <button class="mui-btn mui-btn--small  mui-btn--primary" onclick='viewNote("<?php  echo $x_value[2];?>")'>View </button>
-      </td>
-      <td><?php echo $x_value[3]?></td>
-      <td><?php echo $x_value[4]?></td>
-      <td><?php echo $x_value[5]?></td>
-      <td><?php echo $x_value[6]?></td>
-      <td><button class="mui-btn mui-btn--small  mui-btn--primary"  onclick='editNote(<?php echo $x_value[0];?>,"<?php echo $x_value[1]; ?>","<?php echo $x_value[2]; ?>",<?php echo $x_value[3] ?>,<?php echo $x_value[4] ?>,<?php echo $x_value[5]?>)'>Edit</button> 
-      <button class="mui-btn mui-btn--small  mui-btn--danger" onclick='deletenote(<?php echo $x_value[0]?>,"<?php echo $x_value[2]; ?>")'>Delete</button></td>
-    </tr>
-  <?php }?>
-  </tbody>
-</table>
+</div>
+
+ 
 </div>
 </div>
 
@@ -186,7 +186,8 @@ $.ajax({
         data:fd,
         success: function(data) {
             alert(data);
-            location.reload()
+            $('#table_info').text("");
+            get_all_note();
         }
     });
 
@@ -206,17 +207,30 @@ function deletenote(id,file_path){
         data:fd,
         success: function(data) {
             alert(data);
-            location.reload()
+            $('#table_info').text("");
+            get_all_note();
         }
     });
     }
 
 
 
-
+async function get_all_note(){
+  $.ajax({
+          url:'../../../Controller/AdminController/adminnote_controller.php',
+          type: 'GET',
+          cache: false,
+          contentType: false,
+          processData: false,
+          success: function (data) {
+          $('#table_info').append(data);  
+          }
+   })
+}
 
 $(document).ready(function(){
   $('#editnotediv').hide();
+    get_all_note();
     $('#addnote').click(function(e)
     {
             var fd=new FormData();
@@ -238,11 +252,38 @@ $(document).ready(function(){
           data:fd,
           success: function (data) {
             alert(data);
-            location.reload()
+            $('#table_info').text("");
+            get_all_note();
            
           }
           })
           
+
+    })
+
+    $('#sortNote').click(function(e){
+      var fd=new FormData();
+      var req_program=$('#req_program').val();
+      var req_semester=$('#req_semester').val();
+      fd.append('req_program',req_program);
+      fd.append('req_semester',req_semester);
+      fd.append('sortclick','yes');
+      $.ajax({
+          url:'../../../Controller/AdminController/adminnote_controller.php',
+          type: 'POST',
+          cache: false,
+          contentType: false,
+          processData: false,
+          data:fd,
+          success: function (data) {
+         if($('#table_info').text()){
+           $('#table_info').text("");
+           $('#table_info').append(data);  
+         }
+         
+          }
+          })
+          e.preventDefault()
 
     })
 });

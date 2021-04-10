@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 09, 2021 at 02:10 PM
+-- Generation Time: Apr 10, 2021 at 06:16 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.3.27
 
@@ -59,6 +59,23 @@ INSERT INTO `enroll` (`user`, `faculty`, `program`) VALUES
 (3, 3, 33),
 (4, 1, 1),
 (4, 3, 1),
+(4, 1, 1),
+(4, 1, 1),
+(4, 1, 1),
+(4, 1, 1),
+(4, 1, 1),
+(4, 1, 1),
+(4, 1, 1),
+(4, 1, 1),
+(4, 3, 33),
+(4, 3, 33),
+(4, 3, 33),
+(4, 3, 33),
+(4, 3, 33),
+(4, 3, 33),
+(4, 3, 33),
+(4, 3, 33),
+(4, 1, 1),
 (4, 1, 1);
 
 -- --------------------------------------------------------
@@ -85,6 +102,49 @@ INSERT INTO `faculty` (`id`, `faculty_name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `feedback`
+--
+
+CREATE TABLE `feedback` (
+  `id` int(11) NOT NULL,
+  `feedback_text` longtext NOT NULL,
+  `feedback_by` int(11) NOT NULL,
+  `posted_date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `feedback`
+--
+
+INSERT INTO `feedback` (`id`, `feedback_text`, `feedback_by`, `posted_date`) VALUES
+(2, 'Thanks Admin Its very much dami!!!', 2, '2021-04-10 09:47:44');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notice`
+--
+
+CREATE TABLE `notice` (
+  `id` int(11) NOT NULL,
+  `notice_info` longtext NOT NULL,
+  `faculty` int(11) NOT NULL,
+  `program` int(11) NOT NULL,
+  `semester` int(11) NOT NULL,
+  `added_by` int(11) NOT NULL,
+  `added_date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `notice`
+--
+
+INSERT INTO `notice` (`id`, `notice_info`, `faculty`, `program`, `semester`, `added_by`, `added_date`) VALUES
+(4, '      helloo dost', 1, 1, 1, 4, '2021-04-10 15:02:28');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `old_question`
 --
 
@@ -99,6 +159,13 @@ CREATE TABLE `old_question` (
   `added_by` int(11) NOT NULL,
   `added_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `old_question`
+--
+
+INSERT INTO `old_question` (`id`, `question`, `path`, `faculty`, `program`, `semester`, `year`, `added_by`, `added_date`) VALUES
+(1, 'Computer Graphics ', 'C:/xampp/htdocs/PUNotes/View/static/Faculty/Science and Technology/Bachelor of Software Engineering/OldQuestions/Semester/3/2016 Spring/Computer Graphics .pdf', 3, 32, 3, '2016 Spring', 4, '2021-04-10 11:23:30');
 
 -- --------------------------------------------------------
 
@@ -166,6 +233,13 @@ CREATE TABLE `syllabus` (
   `added_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `syllabus`
+--
+
+INSERT INTO `syllabus` (`id`, `syllabus_name`, `path`, `faculty`, `program`, `semester`, `added_by`, `added_date`) VALUES
+(1, 'Comp sixth semester courses', 'C:/xampp/htdocs/PUNotes/View/static/Faculty/Science and Technology/Bachelor of Computer Engineering/Syllabus/Semester/7/Comp sixth semester courses.pdf', 3, 33, 7, 4, '2021-04-10 10:59:48');
+
 -- --------------------------------------------------------
 
 --
@@ -231,6 +305,22 @@ ALTER TABLE `faculty`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `feedback`
+--
+ALTER TABLE `feedback`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `feedback_by` (`feedback_by`);
+
+--
+-- Indexes for table `notice`
+--
+ALTER TABLE `notice`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `faculty` (`faculty`),
+  ADD KEY `program` (`program`),
+  ADD KEY `added_by` (`added_by`);
+
+--
 -- Indexes for table `old_question`
 --
 ALTER TABLE `old_question`
@@ -275,7 +365,7 @@ ALTER TABLE `users_login`
 -- AUTO_INCREMENT for table `course`
 --
 ALTER TABLE `course`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `faculty`
@@ -284,10 +374,22 @@ ALTER TABLE `faculty`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `feedback`
+--
+ALTER TABLE `feedback`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `notice`
+--
+ALTER TABLE `notice`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `old_question`
 --
 ALTER TABLE `old_question`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `program`
@@ -299,7 +401,7 @@ ALTER TABLE `program`
 -- AUTO_INCREMENT for table `syllabus`
 --
 ALTER TABLE `syllabus`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -331,6 +433,20 @@ ALTER TABLE `enroll`
   ADD CONSTRAINT `enroll_ibfk_1` FOREIGN KEY (`user`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `enroll_ibfk_2` FOREIGN KEY (`faculty`) REFERENCES `faculty` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `enroll_ibfk_3` FOREIGN KEY (`program`) REFERENCES `program` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `feedback`
+--
+ALTER TABLE `feedback`
+  ADD CONSTRAINT `feedback_ibfk_1` FOREIGN KEY (`feedback_by`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `notice`
+--
+ALTER TABLE `notice`
+  ADD CONSTRAINT `notice_ibfk_1` FOREIGN KEY (`faculty`) REFERENCES `faculty` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `notice_ibfk_2` FOREIGN KEY (`program`) REFERENCES `program` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `notice_ibfk_3` FOREIGN KEY (`added_by`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `old_question`

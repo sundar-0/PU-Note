@@ -2,21 +2,55 @@
 session_start();
 include 'base.php';
 include 'drawer.php';
+include '../../../Controller/AdminController/admininformation_controller.php';
 ?>
 <div id="content-wrapper">
 <div class="mui--appbar-height"></div>
 
-<div class="mui-container-fluid">
-  <br>
-  <h1>Welcome Admin</h1>
-  <?php
-  if(isset($_SESSION["user_image"]) && isset($_SESSION['user_first_name']) && isset($_SESSION['user_email_address']))
-  {
-    echo '<img src="'.$_SESSION["user_image"].'" class="img-responsive img-circle img-thumbnail" />';
-    echo '<h3><b>Name :</b> '.$_SESSION['user_first_name'].' '.$_SESSION['user_last_name'].'</h3>';
-    echo '<h3><b>Email :</b> '.$_SESSION['user_email_address'].'</h3>';
-  }
-  ?>
+<div class="mui-container">
+  <br><br>
+  <div class="mui-row">
+    <div class="mui-col-md-6" >
+    <div class="mui-panel" style="background:tomato;color:#fff;font-size: 20px;">
+    <i class="fas fa-user"></i> Total User<br>
+    <?php
+    echo $user_count;
+    ?>
+    </div>
+    </div>
+    <div class="mui-col-md-6">
+    <div class="mui-panel" style="background:tomato;color:#fff;font-size: 20px;">
+    <i class="far fa-file-pdf"></i> Total Note Uploaded<br>
+    <?php
+    echo $course_count
+    ?>
+    </div>
+    </div>
+    <div class="mui-col-md-6">
+    <div class="mui-panel" style="background:tomato;color:#fff;font-size: 20px;">
+    <i class="fas fa-question-circle"></i>  Total Old Questions<br>
+    <?php
+    echo $oldquestion_count;
+    ?>
+    </div>
+    </div>
+    <div class="mui-col-md-6">
+    <div class="mui-panel" style="background:tomato;color:#fff;font-size:20px;">
+    <i class="fas fa-graduation-cap"></i> Total Faculty<br>
+    <?php
+    echo $faculty_count;
+    ?>
+    </div>
+    </div>
+    <div class="mui-col-md-6">
+    <div class="mui-panel" style="background:tomato;color:#fff;font-size:20px;">
+    <i class="fas fa-book-reader"></i>  Total Program<br>
+    <?php
+    echo $program_count;
+    ?>
+    </div>
+    </div>
+  </div>
 </div>
 </div>
 
