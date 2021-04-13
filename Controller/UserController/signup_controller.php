@@ -1,5 +1,5 @@
 <?php 
-include 'connection.php';
+include 'C:\xampp\htdocs\PUNotes\Controller\connection.php';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
 if(isset($_POST['email'])&&isset($_POST['password'])){

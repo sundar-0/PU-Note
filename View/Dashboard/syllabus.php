@@ -1,43 +1,45 @@
 <?php
-session_start();
 include '../base.php';
 include 'drawer.php';
 ?>
 
 <div id="content-wrapper">
 <div class="mui--appbar-height"></div>
-<div class="mui-container-fluid">
-  <br>
-  <h1>Syllabus</h1>
-  <div class="mui-row">
-    <div class="mui-col-md-4">
-    <div class="mui-panel">1st Semester</div>
-    </div>
-    <div class="mui-col-md-4">
-    <div class="mui-panel">2nd Semester</div>
-    </div>
-    <div class="mui-col-md-4">
-    <div class="mui-panel">3rd Semester</div>
-    </div>
-    <div class="mui-col-md-4">
-    <div class="mui-panel">4th Semester</div>
-    </div>
-    <div class="mui-col-md-4">
-    <div class="mui-panel">5th Semester</div>
-    </div>
-    <div class="mui-col-md-4">
-    <div class="mui-panel">6th Semester</div>
-    </div>
-    <div class="mui-col-md-4">
-    <div class="mui-panel">7th Semester</div>
-    </div>
-    <div class="mui-col-md-4">
-    <div class="mui-panel">8th Semester</div>
-    </div>
-  </div>
-</div>
-</div>
+<div class="mui-container mt-5">
+<div class="mui-row" id="info">
 
-<?php 
-include '../footer.php';
-?>
+
+</div>
+</div>
+</div>
+<script>
+async function get_syllabus()
+{
+  $.ajax({
+          url:'../../Controller/UserController/syllabus_controller.php',
+          type: 'GET',
+          cache: false,
+          contentType: false,
+          processData: false,
+          success: function (data) {
+          $('#info').append(data);  
+          }
+   })
+}
+var windowObjectReference;
+
+function viewSyllabus(path) {
+  res=path.slice(15,)
+  finalpath="http://localhost"+res;
+
+  windowObjectReference = window.open(
+    finalpath
+  );
+}
+
+$(document).ready(function(){
+
+  get_syllabus();
+})
+
+</script>

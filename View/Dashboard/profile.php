@@ -1,8 +1,7 @@
 <?php
-session_start();
+include '../../Controller/UserController/enroll_controller.php';
 include '../base.php';
 include 'drawer.php';
-include '../../Controller/enroll_controller.php';
 $user=$_SESSION['user'];
 $sql="SELECT first_name,last_name,college from users where id=$user";
 $result=$conn->query($sql);//to check whether the user exists or not 
@@ -145,7 +144,7 @@ $(document).ready(function(){
     $('#enroll').submit(function(e){
       $.ajax({
         type:"POST",
-        url:'../../Controller/enroll_controller.php',
+        url:'../../Controller/UserController/enroll_controller.php',
         data:$('#enroll').serialize(),
         success:function(data){
           alert(data);
@@ -158,7 +157,7 @@ $(document).ready(function(){
     $('#update_signup').submit(function(e){
       $.ajax({
         type:"POST",
-        url:'../../Controller/signup_controller.php',
+        url:'../../Controller/UserController/signup_controller.php',
         data:$('#update_signup').serialize(),
         success:function(data){
           alert(data);
@@ -175,7 +174,7 @@ $(document).ready(function(){
       {
         $.ajax({
         type:"POST",
-        url:'../../Controller/enroll_controller.php',
+        url:'../../Controller/UserController/enroll_controller.php',
         data:$('#update_enroll').serialize(),
         success:function(data){
           alert(data);

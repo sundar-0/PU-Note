@@ -24,6 +24,57 @@ else{
 }
 }
 
+
+if (isset($_POST['sortclick']))
+
+{
+        if($_POST['sortclick']=='yes')
+    {  
+        $req_program=$_POST['req_program'];
+        $req_semester=$_POST['req_semester'];
+        $sql="SELECT * FROM `notice` WHERE program='$req_program' AND semester='$req_semester'";
+        $result=$conn->query($sql);
+        $all_notice=mysqli_fetch_all($result);
+        if(!empty($all_notice)){?>
+            <table class="mui-table mui-table--bordered mui-table--responsive">
+            <thead>
+              <tr>
+                <th>id</th>
+                <th>Notice</th>
+                <th>Faculty</th>
+                <th>Program</th>
+                <th>Semester</th>
+                <th>Added By</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+            <?php
+             foreach($all_notice as $x => $x_value) {
+               ?>
+               <tr>
+          
+                <td><?php echo $x_value[0]?></td>
+                <td>
+                <?php echo $x_value[1]?>
+                </td>
+                <td><?php echo $x_value[2]?></td>
+                <td><?php echo $x_value[3]?></td>
+                <td><?php echo $x_value[4]?></td>
+                <td><?php echo $x_value[5]?></td>
+                <td><button class="mui-btn mui-btn--small  mui-btn--primary"  onclick='editNotice(<?php echo $x_value[0];?>,"<?php echo $x_value[1]; ?>","<?php echo $x_value[2]; ?>",<?php echo $x_value[3] ?>,<?php echo $x_value[4] ?>)'>Edit</button> 
+                <button class="mui-btn mui-btn--small  mui-btn--danger" onclick='deleteNotice(<?php echo $x_value[0]?>)'>Delete</button></td>
+              </tr>
+            <?php }?>
+            </tbody>
+            </table>
+            <?php }
+            else{
+                echo "No Data Found!!";
+            }
+    }
+}
+
 //Delete Notice Code Here:
 if (isset($_POST['deleteclick']))
 {

@@ -6,12 +6,37 @@ include 'drawer.php';
 
 <div id="content-wrapper">
 <div class="mui--appbar-height"></div>
-<div class="mui-container-fluid">
-  <br>
-  <h1>News and Notice</h1>
+<div class="mui-container" id="info">
+
+
+
+</div>
+
 </div>
 </div>
 
-<?php 
-include '../footer.php';
-?>
+
+<script>
+async function get_notice()
+{
+  $.ajax({
+          url:'../../Controller/UserController/notice_controller.php',
+          type: 'GET',
+          cache: false,
+          contentType: false,
+          processData: false,
+          success: function (data) {
+          $('#info').append(data);  
+          }
+   })
+}
+
+
+$(document).ready(function(){
+
+  get_notice();
+})
+
+</script>
+
+

@@ -1,3 +1,8 @@
+<?php
+session_start();
+include '../../Controller/AdminController/admininformation_controller.php';
+?>
+
 <div id="sidedrawer" class="mui--no-user-select">
 <div id="sidedrawer-brand" class="mui--appbar-line-height">
   <span class="mui--text-title">PU Notes</span>
@@ -11,7 +16,7 @@
 </a>
 <a href="newsandnotice.php">
   <li>   
-    <strong><i class="fas fa-flag"></i> News and Notice <span class="mui--z5 mui--text-danger" style="padding: 2.5px;border-radius: 5px;"> 56 </span></strong>
+    <strong><i class="fas fa-flag"></i> News and Notice <span class="mui--z5 mui--text-danger" style="padding: 2.5px;border-radius: 5px;"><?php echo $notice_count;?> </span></strong>
    
   </li>
 </a>

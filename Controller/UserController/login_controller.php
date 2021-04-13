@@ -1,7 +1,7 @@
 <?php
 $email=$_POST['email'];
 $pass=$_POST['password'];
-include 'connection.php';
+include 'C:\xampp\htdocs\PUNotes\Controller\connection.php';
 $sql="SELECT * FROM users WHERE email='$email' and password='$pass'";
 $result=$conn->query($sql);//to check whether the user exists or not 
 if($result->num_rows>0)//if there exists a user

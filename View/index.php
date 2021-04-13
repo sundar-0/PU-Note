@@ -113,7 +113,7 @@ $login_button = '<a href="'.$google_client->createAuthUrl().'"> <button class="m
     $('#signupform').submit(function(e){
       $.ajax({
         type:"POST",
-        url:'../Controller/signup_controller.php',
+        url:'../Controller/UserController/signup_controller.php',
         data:$('#signupform').serialize(),
         success:function(data){
           alert(data)
@@ -130,6 +130,7 @@ $login_button = '<a href="'.$google_client->createAuthUrl().'"> <button class="m
   }
   function activateloginModal() {
     // initialize modal element
+
     var loginform='<form class="mui-form" id="loginform"><legend>Login</legend><div class="mui-textfield mui-textfield--float-label"> <input type="email" name="email" required> <label>Required Email Field</label> </div> <div class="mui-textfield mui-textfield--float-label"> <input type="password" name="password" required> <label>Required Password Field</label> </div> <button type="submit" class="mui-btn mui-btn--raised">Submit</button></form>';
     var modalEl = document.createElement('div');
     modalEl.style.width = '400px';
@@ -144,7 +145,7 @@ $login_button = '<a href="'.$google_client->createAuthUrl().'"> <button class="m
     $('#loginform').submit(function(e){
       $.ajax({
         type:"POST",
-        url:'../Controller/login_controller.php',
+        url:'../Controller/UserController/login_controller.php',
         data:$('#loginform').serialize(),
         success:function(data){
           if(data==="success"){
@@ -163,6 +164,7 @@ $login_button = '<a href="'.$google_client->createAuthUrl().'"> <button class="m
   }
   );
 }
+
 
 
 

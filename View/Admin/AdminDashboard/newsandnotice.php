@@ -1,7 +1,7 @@
 <?php
 include 'base.php';
 include 'drawer.php';
-include '../../../Controller/enroll_controller.php';
+include '../../../Controller/UserController/enroll_controller.php';
 include '../../../Controller/AdminController/admininformation_controller.php';
 
 ?>
@@ -123,7 +123,7 @@ include '../../../Controller/AdminController/admininformation_controller.php';
     </div>
 </div>
 
-<button class="mui-btn mui-btn--raised" id="sortNote">Apply</button>
+<button class="mui-btn mui-btn--raised" id="sortNotice">Apply</button>
 
 </div><br><br>
 <div id="table_info">
@@ -237,6 +237,31 @@ $(document).ready(function(){
           }
          
       })
+    })
+    $('#sortNotice').click(function(e){
+      var fd=new FormData();
+      var req_program=$('#req_program').val();
+      var req_semester=$('#req_semester').val();
+      fd.append('req_program',req_program);
+      fd.append('req_semester',req_semester);
+      fd.append('sortclick','yes');
+      $.ajax({
+          url:'../../../Controller/AdminController/adminnotice_controller.php',
+          type: 'POST',
+          cache: false,
+          contentType: false,
+          processData: false,
+          data:fd,
+          success: function (data) {
+         if($('#table_info').text()){
+           $('#table_info').text("");
+           $('#table_info').append(data);  
+         }
+         
+          }
+          })
+          e.preventDefault()
+
     })
 }
 
