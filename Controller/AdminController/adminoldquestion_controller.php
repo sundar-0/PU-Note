@@ -1,11 +1,12 @@
 <?php
-include 'C:\xampp\htdocs\PUNotes\Controller\connection.php';
 session_start();
+if (isset($_SESSION['status']) && isset($_SESSION['is_admin'])){
+    if($_SESSION['status']=='logedin' and $_SESSION['is_admin']==1)
+    {
+include 'C:\xampp\htdocs\PUNotes\Controller\connection.php';
 $AddedBy=$_SESSION['user'];
 if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
- 
-
     //Add Note Code Here:
         if (isset($_POST['addclick']))
         {
@@ -251,6 +252,15 @@ else{
       echo "No Data Found";
   }
 }
-
+}
+else
+    {
+    echo "Only Admin Can View This Page";
+    }
+}
+  else
+  {
+    echo "You Must Login to have access to this page";
+  }
 ?>
 
