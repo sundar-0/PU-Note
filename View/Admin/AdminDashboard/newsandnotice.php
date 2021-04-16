@@ -1,7 +1,11 @@
 <?php
+session_start();
+if (isset($_SESSION['status']) && isset($_SESSION['is_admin'])){
+    if($_SESSION['status']=='logedin' and $_SESSION['is_admin']==1)
+    {
 include 'base.php';
 include 'drawer.php';
-include '../../../Controller/UserController/enroll_controller.php';
+include '../../../Controller/UserController/get_faculty_program.php';
 include '../../../Controller/AdminController/admininformation_controller.php';
 
 ?>
@@ -133,6 +137,18 @@ include '../../../Controller/AdminController/admininformation_controller.php';
 
 </div>
 </div>
+<?php 
+    }
+    else
+    {
+    echo "Only Admin Can View This Page";
+    }
+}
+  else
+  {
+    echo "You Must Login to have access to this page";
+  }
+?>
 
 
 <script>
@@ -145,7 +161,10 @@ async function get_all_notice(){
         contentType: false,
         processData: false,
         success: function(data) {
-           $('#table_info').append(data)
+          if($('#table_info').text()){
+            $('#table_info').text("");
+            $('#table_info').append(data);
+          }
         }
     });
 }
@@ -182,6 +201,7 @@ $.ajax({
             location.reload();
         }
     });
+    e.preventDefault();
   })
 });
 }
@@ -199,19 +219,17 @@ function deleteNotice(id){
         data:fd,
         success: function(data) {
             alert(data);
-            location.reload();
+            get_all_notice();
+           
         }
     });
     }
 
 
 
-
-
-
 $(document).ready(function(){
   $('#editnoticediv').hide();
-  get_all_notice();
+    get_all_notice();
     $('#addnoticeform').submit(function(e)
     {
             var fd=new FormData();
@@ -224,19 +242,21 @@ $(document).ready(function(){
             fd.append('program',program)
             fd.append('semester',semester)
             fd.append('addclick','yes')
-          $.ajax({
-          url: '../../../Controller/AdminController/adminnotice_controller.php',
-          type: 'POST',
-          cache: false,
-          contentType: false,
-          processData: false,
-          data:fd,
-          success: function (data) {
-            alert(data);
-            location.reload();
-          }
-         
-      })
+            $.ajax({
+            url: '../../../Controller/AdminController/adminnotice_controller.php',
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data:fd,
+            success: function (data) {
+              alert(data);
+              $('#addnoticeform')[0].reset();
+              get_all_notice();
+            }
+          
+        })
+        e.preventDefault();
     })
     $('#sortNotice').click(function(e){
       var fd=new FormData();
@@ -256,16 +276,12 @@ $(document).ready(function(){
          if($('#table_info').text()){
            $('#table_info').text("");
            $('#table_info').append(data);  
-         }
-         
+           }  
           }
-          })
-          e.preventDefault()
-
+        })
+        e.preventDefault();
     })
 }
-
-
 
 );
 

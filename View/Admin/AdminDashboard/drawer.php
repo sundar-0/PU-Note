@@ -1,6 +1,8 @@
-
 <?php 
 session_start();
+if (isset($_SESSION['status']) && isset($_SESSION['is_admin'])){
+    if($_SESSION['status']=='logedin' and $_SESSION['is_admin']==1)
+    {
 include '../../../Controller/AdminController/admininformation_controller.php';
 ?>
 <div id="sidedrawer" class="mui--no-user-select">
@@ -66,3 +68,15 @@ include '../../../Controller/AdminController/admininformation_controller.php';
   </div>
 </div>
 </header>
+<?php 
+    }
+    else
+    {
+    echo "Only Admin Can View This Page";
+    }
+}
+  else
+  {
+    echo "You Must Login to have access to this page";
+  }
+?>

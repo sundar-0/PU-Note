@@ -1,8 +1,12 @@
 <?php
+session_start();
+if (isset($_SESSION['status']) && isset($_SESSION['is_admin'])){
+    if($_SESSION['status']=='logedin' and $_SESSION['is_admin']==1)
+    {
 include 'C:\xampp\htdocs\PUNotes\Controller\connection.php';
+$AddedBy=$_SESSION['user'];
 if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
-session_start();
 //Add Note Code Here:
 if (isset($_POST['addclick']))
 {
@@ -11,7 +15,6 @@ if($_POST['addclick']=='yes')
 $semester=$_POST['semester'];
 $faculty_id=$_POST['faculty'];
 $program_id=$_POST['program'];
-$AddedBy=$_SESSION['user'];
 $filename=$_FILES['file']['name'];
 $file=explode(".",$filename)[0];
 $sql="SELECT faculty_name,program_name FROM faculty JOIN program on faculty.id=program.fact_id WHERE faculty.id=$faculty_id and program.id=$program_id";
@@ -186,7 +189,7 @@ if (isset($_POST['updateclick']))
             if(!($row->faculty_name==$prev_faculty && $row->program_name==$prev_program && $updated_semester==$prev_sem))
             {
                 $curr_path ="C:/xampp/htdocs/PUNotes/View/static/Faculty/$row->faculty_name/$row->program_name/Notes/Semester/$updated_semester/$prev_filename"; 
-                $result=rename($previous_filepath,$curr_path);
+                $result=rename("$previous_filepath","$curr_path");
                 if($result==1){
                     $sql="UPDATE `course` SET `path`='$curr_path',`faculty`='$updated_faculty',`program`='$updated_program',`semester`='$updated_semester' WHERE id='$id' ";
                     if($conn->query($sql)==TRUE){
@@ -249,7 +252,14 @@ else{
         }
     
 }
- 
-
-
+}
+else
+    {
+    echo "Only Admin Can View This Page";
+    }
+}
+  else
+  {
+    echo "You Must Login to have access to this page";
+  }
 ?>

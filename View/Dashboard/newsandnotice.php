@@ -1,5 +1,8 @@
 <?php
 session_start();
+if (isset($_SESSION['status']) && isset($_SESSION['is_admin'])){
+  if($_SESSION['status']=='logedin' and $_SESSION['is_admin']==0)
+{
 include '../base.php';
 include 'drawer.php';
 ?>
@@ -13,7 +16,18 @@ include 'drawer.php';
 </div>
 
 </div>
-</div>
+<?php 
+}
+ else
+{
+echo "Only User Can View This Page";
+}
+}
+else
+{
+echo "You Must Login to have access to this page";
+}
+?>
 
 
 <script>

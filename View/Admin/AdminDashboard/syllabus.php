@@ -1,9 +1,11 @@
 <?php
 session_start();
+if (isset($_SESSION['status']) && isset($_SESSION['is_admin'])){
+    if($_SESSION['status']=='logedin' and $_SESSION['is_admin']==1)
+    {
 include 'base.php';
 include 'drawer.php';
-include '../../../Controller/UserController/enroll_controller.php';
-include '../../../Controller/AdminController/adminsyllabus_controller.php';
+include '../../../Controller/UserController/get_faculty_program.php';
 ?>
 
 <div id="content-wrapper">
@@ -25,7 +27,7 @@ include '../../../Controller/AdminController/adminsyllabus_controller.php';
                 ?> 
               </select>
               <label>Faculty</label>
-              </div>
+            </div>
 
               <div class="mui-select">
               <select name="program" id="program">
@@ -95,49 +97,67 @@ include '../../../Controller/AdminController/adminsyllabus_controller.php';
   </div>
 <br><br>
 
+<hr>
+<div>
+<h1>Sort By:</h1>
+<div class="mui-row">
+    <div class="mui-col-md-6" >
+        <div class="mui-select">
+                      <select name="req_program" id="req_program">
+                        <?php
+                        foreach($program as $x => $x_value) {
+                          echo '<option  value="'.$x_value[0].'">'.$x_value[1].'</option>';
+                        }
+                        ?> 
+                      </select>
+                      <label>Program</label>
+        </div>
+    </div>
+    <div class="mui-col-md-6" >
+          <div class="mui-select">
+                        <select name="req_semester" id="req_semester">
+                          <?php
+                          for($i=1;$i<=8;$i++) {
+                            echo '<option  value="'.$i.'">'.$i.'</option>';
+                          }
+                          ?> 
+                        </select>
+                        <label>Semester</label>
+          </div>
+    </div>
+</div>
+
+<button class="mui-btn mui-btn--raised" id="sortSyllabus">Apply</button>
+
+</div><br><br>
 
 
-  <table class="mui-table mui-table--bordered">
-  <thead>
-    <tr>
-      <th>id</th>
-      <th>Syllabus Name</th>
-      <th>Faculty</th>
-      <th>Program</th>
-      <th>Semester</th>
-      <th>Added By</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-  <?php 
-  if(!empty($all_syllabus))
-   foreach($all_syllabus as $x => $x_value) {
-     ?>
-     <tr>
 
-      <td><?php echo $x_value[0]?></td>
-      <td>
-      <?php echo $x_value[1]?>
-      <button class="mui-btn mui-btn--small  mui-btn--primary" onclick='viewSyllabus("<?php  echo $x_value[2];?>")'>View </button>
-      </td>
-      <td><?php echo $x_value[3]?></td>
-      <td><?php echo $x_value[4]?></td>
-      <td><?php echo $x_value[5]?></td>
-      <td><?php echo $x_value[6]?></td>
-      <td><button class="mui-btn mui-btn--small  mui-btn--primary"  onclick='editSyllabus(<?php echo $x_value[0];?>,"<?php echo $x_value[1]; ?>","<?php echo $x_value[2]; ?>",<?php echo $x_value[3] ?>,<?php echo $x_value[4] ?>,<?php echo $x_value[5]?>)'>Edit</button> 
-      <button class="mui-btn mui-btn--small  mui-btn--danger" onclick='deleteSyllabus(<?php echo $x_value[0]?>,"<?php echo $x_value[2]; ?>")'>Delete</button></td>
-    </tr>
-  <?php }?>
-  </tbody>
-</table>
+<div id="table_info">
+
+</div>
+
+//
+
+//
 </div>
 </div>
+<?php 
+    }
+    else
+    {
+    echo "Only Admin Can View This Page";
+    }
+}
+  else
+  {
+    echo "You Must Login to have access to this page";
+  }
+?>
 
 
 <script>
 var windowObjectReference;
-
 function viewSyllabus(path) {
   res=path.slice(15,)
   finalpath="http://localhost"+res;
@@ -145,6 +165,21 @@ function viewSyllabus(path) {
   windowObjectReference = window.open(
     finalpath
   );
+}
+async function get_all_syllabus(){
+  $.ajax({
+        url: '../../../Controller/AdminController/adminsyllabus_controller.php',
+        type:'GET',
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function(data) {
+          if($('#table_info').text()){
+            $('#table_info').text("");
+            $('#table_info').append(data);
+          }
+        }
+    });
 }
 function editSyllabus(id,filename,path,faculty,program,semester){
 $('#addsyllabusdiv').hide();
@@ -182,8 +217,8 @@ $.ajax({
         processData: false,
         data:fd,
         success: function(data) {
-            alert(data);
-            location.reload()
+          alert(data);
+          location.reload();
         }
     });
 
@@ -203,17 +238,15 @@ function deleteSyllabus(id,file_path){
         data:fd,
         success: function(data) {
             alert(data);
-            location.reload()
+            get_all_syllabus();
         }
     });
     }
 
 
-
-
-
 $(document).ready(function(){
   $('#editsyllabusdiv').hide();
+    get_all_syllabus();
     $('#addsyllabus').click(function(e)
     {
             var fd=new FormData();
@@ -235,11 +268,39 @@ $(document).ready(function(){
           data:fd,
           success: function (data) {
             alert(data);
-            location.reload()
-           
+          $('#addsyllabusdiv #faculty').val("");
+          $('#addsyllabusdiv #program').val("");
+          $('#addsyllabusdiv #semester').val("");
+            get_all_syllabus();
           }
           })
           
+
+    })
+
+    $('#sortSyllabus').click(function(e){
+      var fd=new FormData();
+      var req_program=$('#req_program').val();
+      var req_semester=$('#req_semester').val();
+      fd.append('req_program',req_program);
+      fd.append('req_semester',req_semester);
+      fd.append('sortclick','yes');
+      $.ajax({
+          url:'../../../Controller/AdminController/adminsyllabus_controller.php',
+          type: 'POST',
+          cache: false,
+          contentType: false,
+          processData: false,
+          data:fd,
+          success: function (data) {
+         if($('#table_info').text()){
+           $('#table_info').text("");
+           $('#table_info').append(data);  
+         }
+         
+          }
+          })
+          e.preventDefault()
 
     })
 });

@@ -1,189 +1,118 @@
 <?php
-include '../../Controller/UserController/enroll_controller.php';
+session_start();
+if (isset($_SESSION['status']) && isset($_SESSION['is_admin'])){
+            if($_SESSION['status']=='logedin' and $_SESSION['is_admin']==0)
+            {
 include '../base.php';
 include 'drawer.php';
-$user=$_SESSION['user'];
-$sql="SELECT first_name,last_name,college from users where id=$user";
-$result=$conn->query($sql);//to check whether the user exists or not 
-$user_info=mysqli_fetch_object($result);
+include '../../Controller/UserController/get_faculty_program.php';
 ?>
 <div id="content-wrapper">
   <div class="mui--appbar-height"></div>
-    <div class="mui-container-fluid">
-      <br>
-      <h1>Your Profile</h1>
-    <ul class="mui-tabs__bar mui-tabs__bar--justified">
-      <li class="mui--is-active"><a data-mui-toggle="tab" data-mui-controls="pane-justified-1">About Me</a></li>
-      <li><a data-mui-toggle="tab" data-mui-controls="pane-justified-2">Faculty And Program</a></li>
-    </ul>
-    <div class="mui-tabs__pane mui--is-active" id="pane-justified-1">
-    <?php if($user_info->first_name && $user_info->last_name && $user_info->college){?>
-    <div class="mui--container">
-    <br>
-    <form class="mui-form" id="update_signup">
-        <input type="hidden" name='user' value="<?php echo $user;?>">
-          <div class="mui-textfield mui-textfield--float-label">
-            <input type="text" name="first_name" value="<?php echo $user_info->first_name?>">
-            <label>Your First Name</label>
-          </div>
-          <div class="mui-textfield mui-textfield--float-label">
-            <input type="text" name="last_name" value="<?php echo $user_info->last_name?>">
-            <label>Your Last Name</label>
-          </div>
-          <div class="mui-textfield mui-textfield--float-label">
-                <input type="text" name="college" value="<?php echo $user_info->college?>">
-                <label>Your College Name Here</label>
-          </div>
-        <button type="submit" class="mui-btn mui-btn--raised">Update</button>
-      </form>
-    </div>
-    <?php }
-    else{?>
-        <div class="mui--container">
-        <br>
-        <form class="mui-form" id="update_signup">
-        <input type="hidden" name='user' value="<?php echo $user;?>">
-          <div class="mui-textfield mui-textfield--float-label">
-            <input type="text" name="first_name">
-            <label>Your First Name</label>
-          </div>
-          <div class="mui-textfield mui-textfield--float-label">
-            <input type="text" name="last_name">
-            <label>Your Last Name</label>
-          </div>
-          <div class="mui-textfield mui-textfield--float-label">
-                <input type="text" name="college">
-                <label>Your College Name Here</label>
-          </div>
-          <button type="submit" class="mui-btn mui-btn--raised">Submit</button>
-        </form>
-        </div>
-   <?php }
-       ?>
-    </div>
 
-    <div class="mui-tabs__pane" id="pane-justified-2">
-      <?php if($enroll_user->num_rows>0){?>
-        <div class="mui--container">
-        <br>
+    <div class="mui-container mt-5">
+    <div class="mui-col-12 mui-col-md-6 mui-panel mui--text-left" id="profile">
+        <h3>Your Information</h3><hr>
+
+    </div>
+    <div class="mui-col-12 mui-col-md-6 mui-panel mui--text-left" id="editprofile">
+        <h3>Edit Information</h3><hr>
+        <form id="editform" method="POST">
+       <label>First Name:</label> 
+        <input type="text" name="fname" id="fname"><hr>
+       <label>Last Name</label>
+        <input type="text" name="lname" id="lname"><hr>
+        <label>Faculty</label>
+        <select name="faculty" id="faculty">
         <?php
-       $enroll_user= mysqli_fetch_object($enroll_user);?>
-    <form class="mui-form" id='update_enroll' method="POST">   
-         <div class="mui-select">
-         <select name="faculty">
-           <?php
-           foreach($faculty as $x => $x_value) {
-             if( $enroll_user->faculty==$x_value[0])
-             echo '<option value="'.$x_value[0].'" selected>'.$x_value[1].'</option>';
-             else
-             echo '<option  value="'.$x_value[0].'">'.$x_value[1].'</option>';
-           }
-           ?> 
-         </select>
-         <label>Your Faculty</label>
-         </div>
-
-         <div class="mui-select">
-         <select name="program">
-           <?php
-           foreach($program as $x => $x_value) {
-            if( $enroll_user->program==$x_value[0])
-             echo '<option  value="'.$x_value[0].'" selected>'.$x_value[1].'</option>';
-            else
-            echo '<option  value="'.$x_value[0].'">'.$x_value[1].'</option>';
-           }
-           ?> 
-         </select>
-         <label>Your Program</label>
-         </div>
-         <input type="hidden"  name="is_update_click" value="off">
-         <button id="btn_update_enroll" class="mui-btn mui-btn--raised">Update</button>
-       </form>
-        </div>
-        <?php }
-        else{?>
-            <div class="mui--container">
-            <br>
-            <form class="mui-form" id='enroll'>
-         
-              <div class="mui-select">
-              <select name="faculty">
-                <?php
-                foreach($faculty as $x => $x_value) {
+        foreach($faculty as $x => $x_value) {
                   echo '<option value="'.$x_value[0].'">'.$x_value[1].'</option>';
                 }
-                ?> 
-              </select>
-              <label>Your Faculty</label>
-              </div>
-
-              <div class="mui-select">
-              <select name="program">
-                <?php
+        ?> 
+        </select><hr>
+        <label>Program</label>
+        <select name="program" id="program">
+        <?php
                 foreach($program as $x => $x_value) {
                   echo '<option  value="'.$x_value[0].'">'.$x_value[1].'</option>';
                 }
                 ?> 
-              </select>
-              <label>Your Program</label>
-              </div>
-              <button type="submit" class="mui-btn mui-btn--raised">Submit</button>
-            </form>
-            </div>
-          <?php } ?>
-
+        </select><hr>
+        <label>College</label>
+        <input type="text" name="college" id="college"><hr>
+        <button id="updateProfile">Update</button>
+        </form>
+    </div>
     </div>
   </div>
 </div>
-
 <?php 
-include '../footer.php';
+}
+ else
+{
+echo "Only User Can View This Page";
+}
+}
+else
+{
+echo "You Must Login to have access to this page";
+}
 ?>
-<script>
-$(document).ready(function(){
-    $('#enroll').submit(function(e){
-      $.ajax({
-        type:"POST",
-        url:'../../Controller/UserController/enroll_controller.php',
-        data:$('#enroll').serialize(),
-        success:function(data){
-          alert(data);
-          location.reload();
-        }
-      })
-    })});
 
-    $(document).ready(function(){
-    $('#update_signup').submit(function(e){
+
+<script>
+
+async function get_user_profile()
+{
+  $.ajax({
+        type:"GET",
+        url:'../../Controller/UserController/signup_enroll_controller.php',
+        success: function(data) {
+            $('#profile').append(data);
+          }
+        })
+}
+function editInfo(fname,lname,clg,fact,prog){
+console.log('working')
+$('#profile').hide();
+$('#editprofile').show();
+$('#fname').val(fname).change()
+$('#lname').val(lname).change()
+$('#college').val(clg).change()
+$('#faculty').val(fact).change()
+$('#program').val(prog).change()
+}
+
+$(document).ready(function(){
+    get_user_profile();
+    $('#editprofile').hide();
+    $('#editform').submit(function(e){
+      var fd=new FormData();
+      var updated_fname=$('#fname').val()
+      var updated_lname=$('#lname').val()
+      var updated_clg=$('#college').val()
+      var updated_fac=$("#faculty").val()
+      var updated_prog=$('#program').val()
+      fd.append('updated_fname',updated_fname)
+      fd.append('updated_lname',updated_lname)
+      fd.append('updated_clg',updated_clg)
+      fd.append('updated_fac',updated_fac)
+      fd.append('updated_prog',updated_prog)
+      fd.append('updateclick',"yes")
       $.ajax({
         type:"POST",
-        url:'../../Controller/UserController/signup_controller.php',
-        data:$('#update_signup').serialize(),
+        url:'../../Controller/UserController/signup_enroll_controller.php',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data:fd,
         success:function(data){
           alert(data);
-          $('#update_signup')[0].reset();
-          location.reload();
-        }
-      })
-    })});
-    $(document).ready(function(){
-    $('#btn_update_enroll').click(function(e){
-      $('input[name="is_update_click"]').val('on');
-      $('#update_enroll').submit(
-      function(e)
-      {
-        $.ajax({
-        type:"POST",
-        url:'../../Controller/UserController/enroll_controller.php',
-        data:$('#update_enroll').serialize(),
-        success:function(data){
-          alert(data);
-          location.reload();
         }
       })
     })
-  })
-});
+  });
+   
+
 
 </script>
-?>

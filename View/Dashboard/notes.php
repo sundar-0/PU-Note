@@ -1,44 +1,90 @@
 <?php
 session_start();
+if (isset($_SESSION['status']) && isset($_SESSION['is_admin'])){
+  if($_SESSION['status']=='logedin' and $_SESSION['is_admin']==0)
+{
 include '../base.php';
 include 'drawer.php';
 ?>
 
 <div id="content-wrapper">
 <div class="mui--appbar-height"></div>
-<div class="mui-container-fluid">
+<div class="mui-container">
   <br>
-  <h1>Notes</h1>
-  <div class="mui-row">
-    <div class="mui-col-md-4">
-    <div class="mui-panel">1st Semester</div>
-    </div>
-    <div class="mui-col-md-4">
-    <div class="mui-panel">2nd Semester</div>
-    </div>
-    <div class="mui-col-md-4">
-    <div class="mui-panel">3rd Semester</div>
-    </div>
-    <div class="mui-col-md-4">
-    <div class="mui-panel">4th Semester</div>
-    </div>
-    <div class="mui-col-md-4">
-    <div class="mui-panel">5th Semester</div>
-    </div>
-    <div class="mui-col-md-4">
-    <div class="mui-panel">6th Semester</div>
-    </div>
-    <div class="mui-col-md-4">
-    <div class="mui-panel">7th Semester</div>
-    </div>
-    <div class="mui-col-md-4">
-    <div class="mui-panel">8th Semester</div>
-    </div>
+  <div class="mui-row" id="info">
   </div>
-
+  <button class="mui-btn" onclick="get_semester()" id="back">Back</button>
 </div>
 </div>
-
 <?php 
-include '../footer.php';
+}
+ else
+{
+echo "Only User Can View This Page";
+}
+}
+else
+{
+echo "You Must Login to have access to this page";
+}
 ?>
+<script>
+var windowObjectReference;
+
+function viewNote(path) {
+  res=path.slice(15,)
+  finalpath="http://localhost"+res;
+
+  windowObjectReference = window.open(
+    finalpath
+  );
+}
+
+async function get_semester()
+{
+  $.ajax({
+          url:'../../Controller/UserController/note_controller.php',
+          type: 'GET',
+          cache: false,
+          contentType: false,
+          processData: false,
+          success: function (data) {
+          if($('#info').text())
+          {
+            $('#info').text("");
+            $('#info').append(data);
+            $('#back').hide();    
+          }
+    
+          }
+   })
+}
+
+function viewNoteSemester(semester){
+  var fd=new FormData();
+  fd.append('semester',semester);
+  fd.append('viewclick','yes');
+  $.ajax({
+          url:'../../Controller/UserController/note_controller.php',
+          type: 'POST',
+          cache: false,
+          contentType: false,
+          processData: false,
+          data:fd,
+          success: function (data) {
+          if(data){
+            $('#info').text("");
+            $('#info').append(data);  
+            $('#back').show();
+          }  
+          }
+   })
+
+}
+
+$(document).ready(function(){
+get_semester();
+$('#back').hide();
+})
+
+</script>

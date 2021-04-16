@@ -40,5 +40,9 @@ if($result)
 }
 mysqli_close($conn);
 }
+else
+{
+    echo "404 Not Found";
+}
 
 ?>

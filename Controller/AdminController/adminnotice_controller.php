@@ -1,8 +1,12 @@
 <?php
+session_start();
+if (isset($_SESSION['status']) && isset($_SESSION['is_admin'])){
+    if($_SESSION['status']=='logedin' and $_SESSION['is_admin']==1)
+    {
 include 'C:\xampp\htdocs\PUNotes\Controller\connection.php';
+$AddedBy=$_SESSION['user'];
 if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
-session_start();
 //Add Notice Code Here:
 if (isset($_POST['addclick']))
 {
@@ -12,7 +16,6 @@ $notice=$_POST['notice'];
 $semester=$_POST['semester'];
 $faculty_id=$_POST['faculty'];
 $program_id=$_POST['program'];
-$AddedBy=$_SESSION['user'];
 $sql="INSERT INTO `notice`(`notice_info`,`faculty`, `program`, `semester`, `added_by`) VALUES ('$notice','$faculty_id','$program_id','$semester','$AddedBy')";
 if($conn->query($sql)==TRUE){
     echo "Notice Posted Successfully!!!";
@@ -156,5 +159,14 @@ else{
         echo "No Data Found!!";
     }
 }
-
+}
+else
+    {
+    echo "Only Admin Can View This Page";
+    }
+}
+  else
+  {
+    echo "You Must Login to have access to this page";
+  }
 ?>

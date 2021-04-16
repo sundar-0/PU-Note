@@ -1,7 +1,11 @@
 <?php
+if (isset($_SESSION['status']) && isset($_SESSION['is_admin'])){
+  if($_SESSION['status']=='logedin' and $_SESSION['is_admin']==1){
+    echo "You must Logout";
+  }
+}
+else{
 include '../base.php';
-
-
 ?>
 <header class="mui-appbar mui--z1">
 <div class="mui-container">
@@ -52,6 +56,8 @@ $(document).ready(function(){
   }
   );
   </script>
+
+ <?php }?>
 
 
 

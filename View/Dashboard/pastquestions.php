@@ -1,5 +1,8 @@
 <?php
 session_start();
+if (isset($_SESSION['status']) && isset($_SESSION['is_admin'])){
+  if($_SESSION['status']=='logedin' and $_SESSION['is_admin']==0)
+{
 include '../base.php';
 include 'drawer.php';
 ?>
@@ -10,9 +13,21 @@ include 'drawer.php';
   <br>
   <div class="mui-row" id="info">
   </div>
-  <button class="mui-btn" onclick="get_semester()" id="back">Back</button>
+  <button class="mui-btn  mui-btn--danger" onclick="get_semester()" id="back">Back</button>
 </div>
 </div>
+<?php 
+}
+ else
+{
+echo "Only User Can View This Page";
+}
+}
+else
+{
+echo "You Must Login to have access to this page";
+}
+?>
 <script>
 var windowObjectReference;
 

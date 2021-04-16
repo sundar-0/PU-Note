@@ -1,8 +1,12 @@
 <?php
 session_start();
+if (isset($_SESSION['status']) && isset($_SESSION['is_admin'])){
+    if($_SESSION['status']=='logedin' and $_SESSION['is_admin']==1)
+    {
 include 'base.php';
 include 'drawer.php';
-include '../../../Controller/UserController/enroll_controller.php';
+include '../../../Controller/UserController/get_faculty_program.php';
+include '../../../Controller/UserController/get_faculty_program.php';
 ?>
 <div id="content-wrapper">
 <div class="mui--appbar-height"></div>
@@ -129,16 +133,48 @@ include '../../../Controller/UserController/enroll_controller.php';
 
 
 
-<div id="table_info">
+<div  id="table_info">
 
 </div>
 
  
 </div>
 </div>
+<?php 
+    }
+    else
+    {
+    echo "Only Admin Can View This Page";
+    }
+}
+  else
+  {
+    echo "You Must Login to have access to this page";
+  }
+?>
+
+
 
 
 <script>
+
+async function get_all_note(){
+  $.ajax({
+          url:'../../../Controller/AdminController/adminnote_controller.php',
+          type: 'GET',
+          cache: false,
+          contentType: false,
+          processData: false,
+          success: function(data) {
+          if($('#table_info').text()){
+            $('#table_info').text("");
+            $('#table_info').append(data);
+          }
+          }
+   })
+}
+
+
 var windowObjectReference;
 
 function viewNote(path) {
@@ -186,8 +222,7 @@ $.ajax({
         data:fd,
         success: function(data) {
             alert(data);
-            $('#table_info').text("");
-            get_all_note();
+            location.reload();
         }
     });
 
@@ -207,26 +242,10 @@ function deletenote(id,file_path){
         data:fd,
         success: function(data) {
             alert(data);
-            $('#table_info').text("");
             get_all_note();
         }
     });
     }
-
-
-
-async function get_all_note(){
-  $.ajax({
-          url:'../../../Controller/AdminController/adminnote_controller.php',
-          type: 'GET',
-          cache: false,
-          contentType: false,
-          processData: false,
-          success: function (data) {
-          $('#table_info').append(data);  
-          }
-   })
-}
 
 $(document).ready(function(){
   $('#editnotediv').hide();
@@ -252,9 +271,7 @@ $(document).ready(function(){
           data:fd,
           success: function (data) {
             alert(data);
-            $('#table_info').text("");
-            get_all_note();
-           
+           get_all_note();
           }
           })
           

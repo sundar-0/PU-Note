@@ -1,8 +1,7 @@
 <?php
 include 'base.php';
 include 'drawer.php';
-include '../../../Controller/UserController/enroll_controller.php';
-
+include '../../../Controller/UserController/get_faculty_program.php';
 ?>
 
 <div id="content-wrapper">
@@ -182,11 +181,14 @@ async function get_past_question()
           cache: false,
           contentType: false,
           processData: false,
-          success: function (data) {
-          $('#table_info').append(data);  
+          success: function(data) {
+          if($('#table_info').text()){
+            $('#table_info').text("");
+            $('#table_info').append(data);
           }
-   })
-}
+        }
+})
+  }
 function editOldQues(id,filename,path,faculty,program,semester,year){
 $('#addoldquesdiv').hide();
 $("#editoldquesdiv #faculty").val(faculty).change()
@@ -227,8 +229,7 @@ $.ajax({
         data:fd,
         success: function(data) {
             alert(data);
-            $('#table_info').text("");
-            get_past_question(); 
+            location.reload();
         }
     });
 
@@ -248,7 +249,6 @@ function deleteOldQues(id,file_path){
         data:fd,
         success: function(data) {
             alert(data);
-            $('#table_info').text("");
             get_past_question();
         }
     });
@@ -284,10 +284,7 @@ $(document).ready(function(){
           data:fd,
           success: function (data) {
             alert(data);
-            $('#table_info').text("");
-            get_past_question();
-            
-           
+            get_past_question();         
           }
           })
           

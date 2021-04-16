@@ -1,50 +1,51 @@
 <?php
 session_start();
+if (isset($_SESSION['status']) && isset($_SESSION['is_admin'])){
+    if($_SESSION['status']=='logedin' and $_SESSION['is_admin']==1)
+    {
 include 'base.php';
 include 'drawer.php';
-include '../../../Controller/AdminController/adminfeedback_controller.php';
 ?>
 
 <div id="content-wrapper">
 <div class="mui--appbar-height"></div>
 <div class="mui-container">
-  <br>
-  <h1>Feedback</h1>
-  <table class="mui-table mui-table--bordered">
-  <thead>
-    <tr>
-      <th>id</th>
-      <th>Feedback</th>
-      <th>Feedback_By</th>
-      <th>Feedback_date</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-  <?php 
-  if(!empty($all_feedback))
-   foreach($all_feedback as $x => $x_value) {
-     ?>
-     <tr>
-
-      <td><?php echo $x_value[0]?></td>
-      <td>
-      <?php echo $x_value[1]?>
-      </td>
-      <td><?php echo $x_value[2]?></td>
-      <td><?php echo $x_value[3]?></td>
-      <td>
-      <button class="mui-btn mui-btn--small  mui-btn--danger" onclick='deleteFeedback(<?php echo $x_value[0]?>)'>Delete</button></td>
-    </tr>
-  <?php }?>
-  </tbody>
-  </table>
+<br><br>
+<div id="table_info">
 
 </div>
 </div>
+</div>
+<?php 
+    }
+    else
+    {
+    echo "Only Admin Can View This Page";
+    }
+}
+  else
+  {
+    echo "You Must Login to have access to this page";
+  }
+?>
 
 
 <script>
+async function get_all_feedback(){
+  $.ajax({
+        url: '../../../Controller/AdminController/adminfeedback_controller.php',
+        type:'GET',
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function(data) {
+          if($('#table_info').text()){
+            $('#table_info').text("");
+            $('#table_info').append(data);
+          }
+        }
+    });
+}
 
 function deleteFeedback(id){
   var fd=new FormData();
@@ -59,10 +60,39 @@ function deleteFeedback(id){
         data:fd,
         success: function(data) {
             alert(data);
-            location.reload();
+            get_all_feedback();
         }
     });
 }
+
+$(document).ready(function(){
+    get_all_feedback();
+    $('#sortFeedback').click(function(e){
+      var fd=new FormData();
+      var req_program=$('#req_program').val();
+      var req_semester=$('#req_semester').val();
+      fd.append('req_program',req_program);
+      fd.append('req_semester',req_semester);
+      fd.append('sortclick','yes');
+      $.ajax({
+          url:'../../../Controller/AdminController/adminfeedback_controller.php',
+          type: 'POST',
+          cache: false,
+          contentType: false,
+          processData: false,
+          data:fd,
+          success: function (data) {
+         if($('#table_info').text()){
+           $('#table_info').text("");
+           $('#table_info').append(data);  
+         }
+         
+          }
+          })
+          e.preventDefault()
+
+    });
+})
 
 
 </script>

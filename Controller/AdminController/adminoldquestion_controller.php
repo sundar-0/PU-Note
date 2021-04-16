@@ -1,10 +1,12 @@
 <?php
 include 'C:\xampp\htdocs\PUNotes\Controller\connection.php';
+session_start();
+$AddedBy=$_SESSION['user'];
 if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
-        session_start();
+ 
 
-        //Add Note Code Here:
+    //Add Note Code Here:
         if (isset($_POST['addclick']))
         {
         if($_POST['addclick']=='yes')
@@ -12,7 +14,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
         $semester=$_POST['semester'];
         $faculty_id=$_POST['faculty'];
         $program_id=$_POST['program'];
-        $AddedBy=$_SESSION['user'];
         $year=$_POST['year'];
         $filename=$_FILES['file']['name'];
         $file=explode(".",$filename)[0];
@@ -182,10 +183,11 @@ if (isset($_POST['updateclick']))
                         $prev_sem=$data[11];
                         $prev_year=$data[12];
                         $prev_filename=$data[13];
+                        echo $prev_filename;
                         if(!($row->faculty_name==$prev_faculty && $row->program_name==$prev_program && $updated_semester==$prev_sem && $updated_year==$prev_year))
                         {
                             $curr_path ="C:/xampp/htdocs/PUNotes/View/static/Faculty/$row->faculty_name/$row->program_name/OldQuestions/Semester/$updated_semester/$updated_year/$prev_filename"; 
-                            $result=rename($previous_filepath,$curr_path);
+                            $result=rename("$previous_filepath","$curr_path");
                             if($result==1){
                                 $sql="UPDATE `old_question` SET `path`='$curr_path',`faculty`='$updated_faculty',`program`='$updated_program',`semester`='$updated_semester',`year`='$updated_year' WHERE id='$id' ";
                                 if($conn->query($sql)==TRUE){
