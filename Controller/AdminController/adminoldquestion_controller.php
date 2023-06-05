@@ -22,6 +22,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
         $result=$conn->query($sql);
         $row=mysqli_fetch_object($result);
         $path ="C:/xampp/htdocs/PUNotes/View/static/Faculty/$row->faculty_name/$row->program_name/OldQuestions/Semester/$semester/$year/"; 
+        if (!file_exists($path)){
+           mkdir($path);
+         }
         $original_path=$path.$filename;
         if (is_uploaded_file($_FILES['file']['tmp_name'])) {
             if (($_FILES['file']['type'] != "application/pdf") )
