@@ -20,8 +20,10 @@ $file=explode(".",$filename)[0];
 $sql="SELECT faculty_name,program_name FROM faculty JOIN program on faculty.id=program.fact_id WHERE faculty.id=$faculty_id and program.id=$program_id";
 $result=$conn->query($sql);
 $row=mysqli_fetch_object($result);
-$path ="C:/xampp/htdocs/PUNotes/View/static/Faculty/$row->faculty_name/$row->program_name/Syllabus/Semester/$semester/"; 
-
+$path ="C:/xampp/htdocs/PUNotes/View/static/Faculty/$row->faculty_name/$row->program_name/Syllabus/Semester/";
+if (!file_exists($path)){
+    mkdir($path);
+}
 $original_path=$path.$filename;
 if (is_uploaded_file($_FILES['file']['tmp_name'])) {
     if (($_FILES['file']['type'] != "application/pdf") )
